@@ -8,7 +8,7 @@ import NudgeAlerts from "@/components/NudgeAlerts";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24">
       <div className="max-w-md mx-auto px-5 pb-8">
         {/* Header */}
         <motion.header
