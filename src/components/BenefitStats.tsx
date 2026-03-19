@@ -1,29 +1,101 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Percent, Shield, Zap } from "lucide-react";
+import { TrendingUp, Percent, Shield } from "lucide-react";
 
-const stats = [
-  { label: "이번 달 절약", value: "₩47,200", icon: TrendingUp, color: "text-success" },
-  { label: "최적화율", value: "94%", icon: Percent, color: "text-primary" },
-  { label: "연결 카드", value: "5장", icon: Shield, color: "text-accent-foreground" },
-  { label: "오늘 라우팅", value: "12건", icon: Zap, color: "text-warning" },
-];
+type BenefitStatsProps = {
+  totalSaved: number;
+  avgPickingRate: number;
+  connectedCardCount: number;
+  routingCount: number;
+  onTileClick?: (key: "savings" | "picking" | "routing") => void;
+};
 
-const BenefitStats = () => {
+const formatKRW = (n: number) => `₩${n.toLocaleString()}`;
+
+const BenefitStats = ({
+  totalSaved,
+  avgPickingRate,
+  connectedCardCount,
+  routingCount,
+  onTileClick,
+}: BenefitStatsProps) => {
+  const savingsStat = {
+    key: "savings" as const,
+    label: "절약 금액",
+    value: formatKRW(totalSaved),
+    icon: TrendingUp,
+    color: "text-success",
+  };
+  const pickingStat = {
+    key: "picking" as const,
+    label: "AI 최적카드 피킹률",
+    value: `${avgPickingRate}%`,
+    icon: Percent,
+    color: "text-primary",
+  };
+  const routingStat = {
+    key: "routing" as const,
+    label: "연결 카드 라우팅",
+    value: `${connectedCardCount}장 · ${routingCount}건`,
+    icon: Shield,
+    color: "text-accent-foreground",
+  };
+
   return (
     <div className="grid grid-cols-2 gap-3">
-      {stats.map((stat, i) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
-          className="toss-card flex flex-col gap-2"
-        >
-          <stat.icon className={`w-5 h-5 ${stat.color}`} />
-          <p className="text-display text-card-foreground">{stat.value}</p>
-          <p className="text-caption">{stat.label}</p>
-        </motion.div>
-      ))}
+      {[savingsStat, pickingStat, routingStat].map((stat, i) => {
+        const clickable = !!onTileClick;
+        const common =
+          "toss-card flex flex-col gap-2 transition-transform hover:scale-[1.01]";
+
+        if (stat.key === "routing") {
+          return (
+            <motion.div
+              key={stat.key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
+              className={`${common} col-span-2 ${clickable ? "cursor-pointer" : ""}`}
+              onClick={() => onTileClick?.(stat.key)}
+              role={clickable ? "button" : undefined}
+              tabIndex={clickable ? 0 : undefined}
+              onKeyDown={(e) => {
+                if (!clickable) return;
+                if (e.key === "Enter" || e.key === " ") onTileClick?.(stat.key);
+              }}
+            >
+              <stat.icon className={`w-4 h-4 ${stat.color}`} />
+              <p className="text-display text-card-foreground">{stat.value}</p>
+              <p className="text-caption">{stat.label}</p>
+            </motion.div>
+          );
+        }
+
+        return (
+          <motion.div
+            key={stat.key}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.15 + i * 0.06 }}
+            className={`${common} ${clickable ? "cursor-pointer" : ""}`}
+            onClick={() => onTileClick?.(stat.key)}
+            role={clickable ? "button" : undefined}
+            tabIndex={clickable ? 0 : undefined}
+            onKeyDown={(e) => {
+              if (!clickable) return;
+              if (e.key === "Enter" || e.key === " ") onTileClick?.(stat.key);
+            }}
+          >
+            <stat.icon className={`w-4 h-4 ${stat.color}`} />
+            <p className="text-display text-card-foreground">{stat.value}</p>
+            <p className="text-caption">{stat.label}</p>
+            {stat.key === "picking" && (
+              <p className="text-[10px] text-muted-foreground">
+                피킹률(%) = 선택 절약액 / 최적(1순위) 절약액 × 100
+              </p>
+            )}
+          </motion.div>
+        );
+      })}
     </div>
   );
 };

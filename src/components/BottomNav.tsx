@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const tabs = [
   { path: "/", icon: Home, label: "홈" },
   { path: "/cards", icon: CreditCard, label: "카드관리" },
-  { path: "/products", icon: ShoppingBag, label: "상품" },
+  { path: "/products", icon: ShoppingBag, label: "상품관리" },
   { path: "/simulation", icon: Zap, label: "시뮬레이션" },
 ];
 

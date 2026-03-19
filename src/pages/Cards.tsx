@@ -89,6 +89,37 @@ const Cards = () => {
           </button>
         </motion.header>
 
+        {/* Summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-3 toss-card"
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            <h3 className="text-title text-card-foreground">이번 달 요약</h3>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div>
+              <p className="text-display text-card-foreground">{cards.filter((c) => c.active).length}</p>
+              <p className="text-caption">활성 카드</p>
+            </div>
+            <div>
+              <p className="text-display text-success">
+                {cards.filter((c) => c.active && c.currentSpend >= c.targetSpend).length}
+              </p>
+              <p className="text-caption">실적 달성</p>
+            </div>
+            <div>
+              <p className="text-display text-warning">
+                {cards.filter((c) => c.active && c.currentSpend < c.targetSpend).length}
+              </p>
+              <p className="text-caption">실적 미달</p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Active / Inactive Sections */}
         <div className="space-y-6">
           {/* Active Cards */}
@@ -245,37 +276,6 @@ const Cards = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6 toss-card"
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-5 h-5 text-primary" />
-            <h3 className="text-title text-card-foreground">이번 달 요약</h3>
-          </div>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div>
-              <p className="text-display text-card-foreground">{cards.filter((c) => c.active).length}</p>
-              <p className="text-caption">활성 카드</p>
-            </div>
-            <div>
-              <p className="text-display text-success">
-                {cards.filter((c) => c.active && c.currentSpend >= c.targetSpend).length}
-              </p>
-              <p className="text-caption">실적 달성</p>
-            </div>
-            <div>
-              <p className="text-display text-warning">
-                {cards.filter((c) => c.active && c.currentSpend < c.targetSpend).length}
-              </p>
-              <p className="text-caption">실적 미달</p>
-            </div>
-          </div>
-        </motion.div>
       </div>
 
       {/* Add Card Modal */}
